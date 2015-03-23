@@ -1,7 +1,7 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,7 +20,7 @@ public class VisualBubbleSort extends JFrame{
 	
 	private Options ops;// = new Options();
 	private JPanel panel;
-	protected int blockWidth = -5;
+	private Sorter sorter;
 
 	public VisualBubbleSort() {
 		
@@ -35,24 +35,12 @@ public class VisualBubbleSort extends JFrame{
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
 				
-				if (blockWidth > -4){
-
-					say("BlockWidth: " + blockWidth + "  x " +  this.getWidth()/blockWidth);
-					g.setColor(Color.green);
-					final int sorts = this.getWidth()/blockWidth;
-					for (int i = 0; i < sorts; i++){
-						g.fillRect(i*blockWidth, this.getHeight(), blockWidth, -Math.round((float)Math.random()*this.getHeight()));
-					}
-					
-				}
-				else{
-					g.setColor(Color.red);
-					for (int i=0; i < 1600; i+=2)
-						g.fillRect(i, 800, 2, -Math.round((float)Math.random()*400));
-				}
+				if (sorter != null) sorter.draw((Graphics2D) g);
+				
 			}
 			
 		};
+		
 		
 		getContentPane().add(panel, BorderLayout.CENTER);
 		setVisible(true);
@@ -62,7 +50,8 @@ public class VisualBubbleSort extends JFrame{
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				System.out.println(panel.getSize());
+				sorter = new Sorter(panel);
+				VisualBubbleSort.this.repaint();
 			}
 		});
 		
@@ -109,7 +98,8 @@ public class VisualBubbleSort extends JFrame{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					
-					VisualBubbleSort.this.blockWidth = 101 - elementsSlider.getValue();
+					sorter.setBlockWidth(101 - elementsSlider.getValue());
+					sorter.start();
 					VisualBubbleSort.this.repaint();
 					
 					elementsSlider.setEnabled(false);
