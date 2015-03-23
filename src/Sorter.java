@@ -26,10 +26,25 @@ public class Sorter {
 
 	public void draw(Graphics2D g){
 		
-		g.setColor(color);
+		if (running){
+			g.setColor(Color.red);
+			for (int i=0; i < blocks.length-done; i++)
+				g.fillRect(i*blockWidth, panel.getHeight(), blockWidth, -Math.round(blocks[i] * panel.getHeight()));
+			
+			g.setColor(Color.green);
+			for (int i=blocks.length-done; i < blocks.length; i++)
+				g.fillRect(i*blockWidth, panel.getHeight(), blockWidth, -Math.round(blocks[i] * panel.getHeight()));
+			
+			g.setColor(Color.blue);
+			g.fillRect(currentBlock*blockWidth, panel.getHeight(), blockWidth, -Math.round(blocks[currentBlock] * panel.getHeight()));
+			g.fillRect((currentBlock+1)*blockWidth, panel.getHeight(), blockWidth, -Math.round(blocks[(currentBlock+1)] * panel.getHeight()));
+		}
+		else{
+			g.setColor(Color.green);
+			for (int i=0; i < blocks.length; i++)
+				g.fillRect(i*blockWidth, panel.getHeight(), blockWidth, -Math.round(blocks[i] * panel.getHeight()));
+		}
 		
-		for (int i=0; i < blocks.length; i++)
-			g.fillRect(i*blockWidth, panel.getHeight(), blockWidth, -Math.round(blocks[i] * panel.getHeight()));
 		
 	}
 
@@ -40,13 +55,19 @@ public class Sorter {
 		generateBlocks();
 	}
 
+	int currentBlock = 0;
+	int done = 0;
 
+	boolean running = false;
+	
 	public void start() {
 		
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
+				
+				running  = true;
 				
 				boolean noChange = false;
 				
@@ -54,7 +75,9 @@ public class Sorter {
 					
 					noChange = true;
 					
-					for (int i=0; i < blocks.length-1; i++){
+					for (int i=0; i < blocks.length-1-done; i++){
+						
+						currentBlock = i;
 						
 						if (blocks[i] <= blocks[i+1])
 							continue;
@@ -73,9 +96,14 @@ public class Sorter {
 							e.printStackTrace();
 						}
 					}
+					
+					done++;
+					say(done);
 				}
 				
 				say("done");
+				running = false;
+				panel.repaint();
 			}
 		}).start();
 	}
