@@ -10,7 +10,6 @@ public class Sorter {
 	private int blockWidth, blockAmount;
 	private Color color = Color.green;
 	private float[] blocks;
-	private int sleep = 50;
 
 	public Sorter(JPanel panel) {
 		this.panel = panel;
@@ -33,7 +32,7 @@ public class Sorter {
 			g.fillRect(i*blockWidth, panel.getHeight(), blockWidth, -Math.round(blocks[i] * panel.getHeight()));
 		
 	}
-	
+
 	public void setBlockWidth(int i) {
 		blockWidth = i;
 		blockAmount = panel.getWidth()/blockWidth;
@@ -41,17 +40,6 @@ public class Sorter {
 		generateBlocks();
 	}
 
-	public Color getColor() {
-		return color;
-	}
-
-	public void setColor(Color color) {
-		this.color = color;
-	}
-	
-	public static void say(Object s){
-		System.out.println(s);
-	}
 
 	public void start() {
 		
@@ -80,7 +68,7 @@ public class Sorter {
 						panel.repaint();
 						
 						try {
-							Thread.sleep(sleep);
+							Thread.sleep(VisualBubbleSort.sleepCounter);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -90,6 +78,18 @@ public class Sorter {
 				say("done");
 			}
 		}).start();
+	}
+	
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+	
+	public static void say(Object s){
+		System.out.println(s);
 	}
 	
 

@@ -13,14 +13,17 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 
 @SuppressWarnings("serial")
 public class VisualBubbleSort extends JFrame{
 	
-	private Options ops;// = new Options();
+	private Options ops;
 	private JPanel panel;
 	private Sorter sorter;
+	protected static int sleepCounter = 50;
 
 	public VisualBubbleSort() {
 		
@@ -73,18 +76,30 @@ public class VisualBubbleSort extends JFrame{
 			JLabel lblElementsToSort = new JLabel("Elements to Sort:");
 			left.add(lblElementsToSort, BorderLayout.WEST);
 			
-			JSlider elementsSlider = new JSlider(0,100, 50);
+			JSlider elementsSlider = new JSlider(1,100, 50);
+			elementsSlider.setInverted(true);
+			elementsSlider.setMajorTickSpacing(10);
 			elementsSlider.setMinorTickSpacing(1);
+			elementsSlider.setPaintTicks(true);
 			left.add(elementsSlider);
 			JPanel right = new JPanel();
 			top.add(right);
 			right.setLayout(new BorderLayout());
 			
-			JLabel lblSpeed = new JLabel("Speed:");
+			JLabel lblSpeed = new JLabel("Delay:");
 			right.add(lblSpeed, BorderLayout.WEST);
 			
-			JSlider slider_1 = new JSlider();
-			right.add(slider_1);
+			JSlider timeSlider = new JSlider(0,1000, 50);
+			timeSlider.setMajorTickSpacing(100);
+			timeSlider.setMinorTickSpacing(1);
+			timeSlider.setPaintTicks(true);
+			timeSlider.addChangeListener(new ChangeListener() {
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					sleepCounter = timeSlider.getValue();
+				}
+			});
+			right.add(timeSlider);
 			
 			JPanel bottom = new JPanel();
 			bottom.setLayout(new GridLayout(0,2));
@@ -98,13 +113,12 @@ public class VisualBubbleSort extends JFrame{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					
-					sorter.setBlockWidth(101 - elementsSlider.getValue());
+					sorter.setBlockWidth(elementsSlider.getValue());
 					sorter.start();
-					VisualBubbleSort.this.repaint();
-					
 					elementsSlider.setEnabled(false);
 					btnStop.setEnabled(true);	
-					btnStart.setEnabled(false);	
+					btnStart.setEnabled(false);
+					VisualBubbleSort.this.repaint();
 				}
 			});
 			btnStop.addActionListener(new ActionListener() {
