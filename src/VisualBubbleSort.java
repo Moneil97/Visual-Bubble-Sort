@@ -50,9 +50,9 @@ public class VisualBubbleSort extends JFrame{
 		
 		
 		getContentPane().add(panel, BorderLayout.CENTER);
-		setVisible(true);
 		ops = new Options();
 		add(ops, BorderLayout.SOUTH);
+		setVisible(true);
 		
 		EventQueue.invokeLater(new Runnable() {
 			@Override

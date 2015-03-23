@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
@@ -45,7 +46,7 @@ public abstract class Sorter {
 			
 			g.setColor(Color.blue);
 			g.fillRect(currentBlock*blockWidth, panel.getHeight()-Math.round(blocks[currentBlock] * panel.getHeight()), blockWidth, Math.round(blocks[currentBlock] * panel.getHeight()));
-			g.fillRect((currentBlock+1)*blockWidth, panel.getHeight()-Math.round(blocks[currentBlock] * panel.getHeight()), blockWidth, Math.round(blocks[(currentBlock+1)] * panel.getHeight()));
+			g.fillRect((currentBlock+1)*blockWidth, panel.getHeight()-Math.round(blocks[currentBlock+1] * panel.getHeight()), blockWidth, Math.round(blocks[currentBlock+1] * panel.getHeight()));
 		}
 		else{
 			g.setColor(Color.green);
@@ -64,6 +65,10 @@ public abstract class Sorter {
 			}
 		}
 		
+		g.setColor(Color.blue);
+		g.setFont(new Font("Arial", Font.PLAIN, 14));
+		g.drawString("Comparisons: " + comparisons, 10, 20);
+		
 	}
 
 	public void setBlockWidth(int i) {
@@ -73,7 +78,7 @@ public abstract class Sorter {
 		generateBlocks();
 	}
 
-	
+	long comparisons = 0;
 	
 	public void start() {
 
@@ -83,8 +88,9 @@ public abstract class Sorter {
 			public void run() {
 
 				try {
-
+					
 					running = true;
+					comparisons = 0;
 
 					boolean noChange = false;
 
@@ -95,6 +101,7 @@ public abstract class Sorter {
 						for (int i = 0; i < blocks.length - 1 - done; i++) {
 
 							currentBlock = i;
+							comparisons++;
 
 							if (blocks[i] <= blocks[i + 1])
 								continue;
