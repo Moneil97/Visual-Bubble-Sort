@@ -3,13 +3,17 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
-
-public class Sorter {
+public abstract class Sorter {
 
 	private JPanel panel;
 	private int blockWidth, blockAmount;
-	private Color color = Color.green;
 	private float[] blocks;
+	private int currentBlock = 0;
+	private int done = 0;
+	private boolean running = false;
+	private Thread thread;
+	
+	abstract void onComplete();
 
 	public Sorter(JPanel panel) {
 		this.panel = panel;
@@ -45,6 +49,13 @@ public class Sorter {
 				g.fillRect(i*blockWidth, panel.getHeight(), blockWidth, -Math.round(blocks[i] * panel.getHeight()));
 		}
 		
+		if(blockWidth > 2){
+			g.setColor(Color.black);
+			for (int i=0; i < blocks.length; i++){
+				int blockHeight = Math.round(blocks[i] * panel.getHeight());
+				g.drawRect(i*blockWidth, panel.getHeight()- blockHeight, blockWidth, blockHeight);
+			}
+		}
 		
 	}
 
@@ -55,70 +66,73 @@ public class Sorter {
 		generateBlocks();
 	}
 
-	int currentBlock = 0;
-	int done = 0;
-
-	boolean running = false;
+	
 	
 	public void start() {
-		
-		new Thread(new Runnable() {
+
+		thread = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				
-				running  = true;
-				
-				boolean noChange = false;
-				
-				while (!noChange){
-					
-					noChange = true;
-					
-					for (int i=0; i < blocks.length-1-done; i++){
-						
-						currentBlock = i;
-						
-						if (blocks[i] <= blocks[i+1])
-							continue;
-						else{
-							float temp = blocks[i];
-							blocks[i] = blocks[i+1];
-							blocks[i+1] = temp;
-							noChange = false;
-						}
-						
-						panel.repaint();
-						
-						try {
+
+				try {
+
+					running = true;
+
+					boolean noChange = false;
+
+					while (!noChange) {
+
+						noChange = true;
+
+						for (int i = 0; i < blocks.length - 1 - done; i++) {
+
+							currentBlock = i;
+
+							if (blocks[i] <= blocks[i + 1])
+								continue;
+							else {
+								float temp = blocks[i];
+								blocks[i] = blocks[i + 1];
+								blocks[i + 1] = temp;
+								noChange = false;
+							}
+
+							panel.repaint();
+
 							Thread.sleep(VisualBubbleSort.sleepCounter);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
+
 						}
+						done++;
 					}
-					
-					done++;
-					say(done);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}finally{
+					done = 0;
+					currentBlock = 0;
+					running = false;
+					thread = null;
+					panel.repaint();
+					say("done");
 				}
-				
-				say("done");
-				running = false;
-				panel.repaint();
 			}
-		}).start();
+		});
+
+		thread.start();
 	}
 	
-	public Color getColor() {
-		return color;
+	public void stop(){
+		try{
+			thread.interrupt();
+		}catch(Exception e){
+			e.printStackTrace();
+		};
 	}
-
-	public void setColor(Color color) {
-		this.color = color;
-	}
+	
+	
 	
 	public static void say(Object s){
 		System.out.println(s);
 	}
 	
-
 }

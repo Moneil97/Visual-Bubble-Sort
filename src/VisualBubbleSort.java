@@ -23,6 +23,9 @@ public class VisualBubbleSort extends JFrame{
 	private Options ops;
 	private JPanel panel;
 	private Sorter sorter;
+	private JSlider elementsSlider;
+	private JButton btnStart;
+	private JButton btnStop;
 	protected static int sleepCounter = 50;
 
 	public VisualBubbleSort() {
@@ -53,7 +56,14 @@ public class VisualBubbleSort extends JFrame{
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				sorter = new Sorter(panel);
+				sorter = new Sorter(panel){
+
+					@Override
+					void onComplete() {
+						resetStopButtons();
+					}
+					
+				};
 				VisualBubbleSort.this.repaint();
 			}
 		});
@@ -76,11 +86,18 @@ public class VisualBubbleSort extends JFrame{
 			JLabel lblElementsToSort = new JLabel("Elements to Sort:");
 			left.add(lblElementsToSort, BorderLayout.WEST);
 			
-			JSlider elementsSlider = new JSlider(1,100, 50);
+			elementsSlider = new JSlider(1,100, 50);
 			elementsSlider.setInverted(true);
 			elementsSlider.setMajorTickSpacing(10);
 			elementsSlider.setMinorTickSpacing(1);
 			elementsSlider.setPaintTicks(true);
+			elementsSlider.addChangeListener(new ChangeListener() {
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					sorter.setBlockWidth(elementsSlider.getValue());
+					VisualBubbleSort.this.repaint();
+				}
+			});
 			left.add(elementsSlider);
 			JPanel right = new JPanel();
 			top.add(right);
@@ -106,8 +123,8 @@ public class VisualBubbleSort extends JFrame{
 			bottom.setBorder(new EmptyBorder(0, 10, 10, 10));
 			this.add(bottom);
 			
-			JButton btnStart = new JButton("Start");
-			JButton btnStop = new JButton("Stop");
+			btnStart = new JButton("Start");
+			btnStop = new JButton("Cancel");
 			btnStart.addActionListener(new ActionListener() {
 				
 				@Override
@@ -125,10 +142,8 @@ public class VisualBubbleSort extends JFrame{
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
-					elementsSlider.setEnabled(true);
-					btnStart.setEnabled(true);	
-					btnStop.setEnabled(false);	
+					sorter.stop();
+					resetStopButtons();
 				}
 			});
 			btnStop.setEnabled(false);
@@ -136,7 +151,13 @@ public class VisualBubbleSort extends JFrame{
 			bottom.add(btnStart);
 			bottom.add(btnStop);
 		}
-		
+
+	}
+	
+	protected void resetStopButtons() {
+		elementsSlider.setEnabled(true);
+		btnStart.setEnabled(true);	
+		btnStop.setEnabled(false);	
 	}
 	
 	public static void say(Object s){
