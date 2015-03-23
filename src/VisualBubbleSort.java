@@ -1,15 +1,15 @@
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
@@ -18,7 +18,8 @@ import javax.swing.border.EmptyBorder;
 @SuppressWarnings("serial")
 public class VisualBubbleSort extends JFrame{
 	
-	private Options ops = new Options();
+	private Options ops;// = new Options();
+	private JPanel panel;
 
 	public VisualBubbleSort() {
 		
@@ -27,24 +28,45 @@ public class VisualBubbleSort extends JFrame{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
-		JPanel panel = new JPanel(){
+		panel = new JPanel(){
 			
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
 				
-				g.setColor(Color.red);
-				for (int i=0; i < 200; i++)
-					g.fillRect(i, 800, 1, -Math.round((float)Math.random()*100));
+				if (rat > -4){
+					
+					g.setColor(Color.green);
+					
+					int blockWidth = Math.round((float) rat * this.getWidth());
+					say("Q: " + blockWidth + "  x " +  this.getWidth()/blockWidth);
+					
+					for (int i = 0; i < this.getWidth()/blockWidth; i++){
+						g.fillRect(i*blockWidth, 800, blockWidth, -Math.round((float)Math.random()*400));
+					}
+					
+				}
+				else{
+					g.setColor(Color.red);
+					for (int i=0; i < 1600; i+=2)
+						g.fillRect(i, 800, 2, -Math.round((float)Math.random()*400));
+				}
 			}
 			
 		};
+		
 		getContentPane().add(panel, BorderLayout.CENTER);
-		
-		System.out.println(panel.getSize());
-		
-		add(ops, BorderLayout.SOUTH);
 		setVisible(true);
+		ops = new Options();
+		add(ops, BorderLayout.SOUTH);
+		
+		EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				System.out.println(panel.getSize());
+			}
+		});
+		
 	}
 	
 	class Options extends JPanel{
@@ -63,7 +85,8 @@ public class VisualBubbleSort extends JFrame{
 			JLabel lblElementsToSort = new JLabel("Elements to Sort:");
 			left.add(lblElementsToSort, BorderLayout.WEST);
 			
-			JSlider elementsSlider = new JSlider();
+			JSlider elementsSlider = new JSlider(0,100, 50);
+			elementsSlider.setMinorTickSpacing(1);
 			left.add(elementsSlider);
 			JPanel right = new JPanel();
 			top.add(right);
@@ -86,6 +109,18 @@ public class VisualBubbleSort extends JFrame{
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					
+					
+					
+					int ratio = 101 - elementsSlider.getValue();
+					
+					double rat = (double) ratio / panel.getWidth();
+					
+					VisualBubbleSort.this.rat = rat;
+					
+					say(101 + " - " + elementsSlider.getValue() + "   / " + panel.getWidth() + " = " + rat);
+					
+					VisualBubbleSort.this.repaint();
 					
 					elementsSlider.setEnabled(false);
 					btnStop.setEnabled(true);	
@@ -110,6 +145,11 @@ public class VisualBubbleSort extends JFrame{
 		
 	}
 	
+	double rat = -5;
+	
+	public static void say(Object s){
+		System.out.println(s);
+	}
 
 	public static void main(String[] args) {
 		
