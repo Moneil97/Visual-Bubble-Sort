@@ -17,7 +17,7 @@ public abstract class Sorter {
 
 	public Sorter(JPanel panel) {
 		this.panel = panel;
-		blockWidth = 10;
+		blockWidth = 50;
 		blockAmount = panel.getWidth()/blockWidth;
 		blocks = new float[blockAmount];
 		generateBlocks();
@@ -112,6 +112,7 @@ public abstract class Sorter {
 					currentBlock = 0;
 					running = false;
 					thread = null;
+					onComplete();
 					panel.repaint();
 					say("done");
 				}

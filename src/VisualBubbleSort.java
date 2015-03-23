@@ -30,6 +30,7 @@ public class VisualBubbleSort extends JFrame{
 
 	public VisualBubbleSort() {
 		
+		setTitle("Visual Bubble Sort [By: Cameron O'Neil]");
 		setSize(800,600);
 		setExtendedState(MAXIMIZED_BOTH);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
