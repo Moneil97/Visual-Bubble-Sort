@@ -32,23 +32,30 @@ public abstract class Sorter {
 		
 		if (running){
 			g.setColor(Color.red);
-			for (int i=0; i < blocks.length-done; i++)
-				g.fillRect(i*blockWidth, panel.getHeight(), blockWidth, -Math.round(blocks[i] * panel.getHeight()));
-			
+			for (int i=0; i < blocks.length-done; i++){
+				int blockHeight = Math.round(blocks[i] * panel.getHeight());
+				g.fillRect(i*blockWidth, panel.getHeight()- blockHeight, blockWidth, blockHeight);
+			}
+				
 			g.setColor(Color.green);
-			for (int i=blocks.length-done; i < blocks.length; i++)
-				g.fillRect(i*blockWidth, panel.getHeight(), blockWidth, -Math.round(blocks[i] * panel.getHeight()));
+			for (int i=blocks.length-done; i < blocks.length; i++){
+				int blockHeight = Math.round(blocks[i] * panel.getHeight());
+				g.fillRect(i*blockWidth, panel.getHeight()-blockHeight, blockWidth, blockHeight);
+			}
 			
 			g.setColor(Color.blue);
-			g.fillRect(currentBlock*blockWidth, panel.getHeight(), blockWidth, -Math.round(blocks[currentBlock] * panel.getHeight()));
-			g.fillRect((currentBlock+1)*blockWidth, panel.getHeight(), blockWidth, -Math.round(blocks[(currentBlock+1)] * panel.getHeight()));
+			g.fillRect(currentBlock*blockWidth, panel.getHeight()-Math.round(blocks[currentBlock] * panel.getHeight()), blockWidth, Math.round(blocks[currentBlock] * panel.getHeight()));
+			g.fillRect((currentBlock+1)*blockWidth, panel.getHeight()-Math.round(blocks[currentBlock] * panel.getHeight()), blockWidth, Math.round(blocks[(currentBlock+1)] * panel.getHeight()));
 		}
 		else{
 			g.setColor(Color.green);
-			for (int i=0; i < blocks.length; i++)
-				g.fillRect(i*blockWidth, panel.getHeight(), blockWidth, -Math.round(blocks[i] * panel.getHeight()));
+			for (int i=0; i < blocks.length; i++){
+				int blockHeight = Math.round(blocks[i] * panel.getHeight());
+				g.fillRect(i*blockWidth, panel.getHeight()-blockHeight, blockWidth, blockHeight);
+			}
 		}
 		
+		//Border
 		if(blockWidth > 2){
 			g.setColor(Color.black);
 			for (int i=0; i < blocks.length; i++){
