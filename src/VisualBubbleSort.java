@@ -20,6 +20,7 @@ public class VisualBubbleSort extends JFrame{
 	
 	private Options ops;// = new Options();
 	private JPanel panel;
+	protected int blockWidth = -5;
 
 	public VisualBubbleSort() {
 		
@@ -34,15 +35,13 @@ public class VisualBubbleSort extends JFrame{
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
 				
-				if (rat > -4){
-					
+				if (blockWidth > -4){
+
+					say("BlockWidth: " + blockWidth + "  x " +  this.getWidth()/blockWidth);
 					g.setColor(Color.green);
-					
-					int blockWidth = Math.round((float) rat * this.getWidth());
-					say("Q: " + blockWidth + "  x " +  this.getWidth()/blockWidth);
-					
-					for (int i = 0; i < this.getWidth()/blockWidth; i++){
-						g.fillRect(i*blockWidth, 800, blockWidth, -Math.round((float)Math.random()*400));
+					final int sorts = this.getWidth()/blockWidth;
+					for (int i = 0; i < sorts; i++){
+						g.fillRect(i*blockWidth, this.getHeight(), blockWidth, -Math.round((float)Math.random()*this.getHeight()));
 					}
 					
 				}
@@ -110,16 +109,7 @@ public class VisualBubbleSort extends JFrame{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					
-					
-					
-					int ratio = 101 - elementsSlider.getValue();
-					
-					double rat = (double) ratio / panel.getWidth();
-					
-					VisualBubbleSort.this.rat = rat;
-					
-					say(101 + " - " + elementsSlider.getValue() + "   / " + panel.getWidth() + " = " + rat);
-					
+					VisualBubbleSort.this.blockWidth = 101 - elementsSlider.getValue();
 					VisualBubbleSort.this.repaint();
 					
 					elementsSlider.setEnabled(false);
@@ -144,8 +134,6 @@ public class VisualBubbleSort extends JFrame{
 		}
 		
 	}
-	
-	double rat = -5;
 	
 	public static void say(Object s){
 		System.out.println(s);
