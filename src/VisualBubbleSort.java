@@ -16,29 +16,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-
-<<<<<<< HEAD
-	private JPanel panel;
-	private int blockWidth, blockAmount;
-	private float[] blocks;
-	private int currentBlock = 0;
-	private int done = 0;
-	private boolean running = false;
-	private Thread thread;
-	
-	abstract void onComplete(); 
-
-	public Sorter(JPanel panel) {
-		this.panel = panel;
-		blockWidth = 50;
-		blockAmount = panel.getWidth()/blockWidth;
-		blocks = new float[blockAmount];
-		generateBlocks();
-	}
-=======
 @SuppressWarnings("serial")
 public class VisualBubbleSort extends JFrame{
->>>>>>> parent of 0de2d51... Improved Painting Algorithm
 	
 	private Options ops;
 	private JPanel panel;
