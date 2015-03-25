@@ -14,7 +14,7 @@ public abstract class Sorter {
 	private boolean running = false;
 	private Thread thread;
 	
-	abstract void onComplete();
+	abstract void onComplete(); 
 
 	public Sorter(JPanel panel) {
 		this.panel = panel;
@@ -31,36 +31,15 @@ public abstract class Sorter {
 
 	public void draw(Graphics2D g){
 		
-		if (running){
-			g.setColor(Color.red);
-			for (int i=0; i < blocks.length-done; i++){
-				int blockHeight = Math.round(blocks[i] * panel.getHeight());
-				g.fillRect(i*blockWidth, panel.getHeight()- blockHeight, blockWidth, blockHeight);
-			}
-				
-			g.setColor(Color.green);
-			for (int i=blocks.length-done; i < blocks.length; i++){
-				int blockHeight = Math.round(blocks[i] * panel.getHeight());
-				g.fillRect(i*blockWidth, panel.getHeight()-blockHeight, blockWidth, blockHeight);
-			}
-			
-			g.setColor(Color.blue);
-			g.fillRect(currentBlock*blockWidth, panel.getHeight()-Math.round(blocks[currentBlock] * panel.getHeight()), blockWidth, Math.round(blocks[currentBlock] * panel.getHeight()));
-			g.fillRect((currentBlock+1)*blockWidth, panel.getHeight()-Math.round(blocks[currentBlock+1] * panel.getHeight()), blockWidth, Math.round(blocks[currentBlock+1] * panel.getHeight()));
-		}
-		else{
-			g.setColor(Color.green);
-			for (int i=0; i < blocks.length; i++){
-				int blockHeight = Math.round(blocks[i] * panel.getHeight());
-				g.fillRect(i*blockWidth, panel.getHeight()-blockHeight, blockWidth, blockHeight);
-			}
-		}
 		
-		//Border
-		if(blockWidth > 2){
-			g.setColor(Color.black);
-			for (int i=0; i < blocks.length; i++){
-				int blockHeight = Math.round(blocks[i] * panel.getHeight());
+		for (int i=0; i < blocks.length; i++){
+			int blockHeight = Math.round(blocks[i] * panel.getHeight());
+			
+			g.setColor(!running ? Color.green : (i == currentBlock || i == currentBlock +1 ? Color.blue : (i < blocks.length-done ? Color.red : Color.green)));
+			g.fillRect(i*blockWidth, panel.getHeight()- blockHeight, blockWidth, blockHeight);
+			
+			if(blockWidth > 2){
+				g.setColor(Color.black);
 				g.drawRect(i*blockWidth, panel.getHeight()- blockHeight, blockWidth, blockHeight);
 			}
 		}
