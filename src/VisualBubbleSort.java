@@ -14,7 +14,7 @@ public abstract class Sorter {
 	private boolean running = false;
 	private Thread thread;
 	
-	abstract void onComplete();
+	abstract void onComplete(); 
 
 	public Sorter(JPanel panel) {
 		this.panel = panel;
